@@ -48,14 +48,25 @@
         let isHovering = false;
         let messageCyclingInterval;
 
-        // Function to check if the tab should be hidden
-        function shouldHideTab() {
-            return sessionStorage.getItem('floatingTabHidden') === 'true';
-        }
-
         // Function to mark the tab as hidden
         function hideTab() {
-            sessionStorage.setItem('floatingTabHidden', 'true');
+            const now = new Date().getTime();
+            const hiddenState = {
+                isHidden: true,
+                timestamp: now
+            };
+            localStorage.setItem('floatingTabState', JSON.stringify(hiddenState));
+        }
+
+        // Function to check if the tab should be hidden
+        function shouldHideTab() {
+            const hiddenState = JSON.parse(localStorage.getItem('floatingTabState'));
+            if (hiddenState && hiddenState.isHidden) {
+                const now = new Date().getTime();
+                const hoursPassed = (now - hiddenState.timestamp) / (1000 * 60 * 60);
+                return hoursPassed < 24; // Check if less than 24 hours have passed
+            }
+            return false;
         }
 
         // Function to show the floating tab
@@ -208,7 +219,7 @@
             const imageDiv = document.createElement('div');
             imageDiv.className = 'image';
             const img = document.createElement('img');
-            img.src = 'https://dev.shatterproof.org/sites/default/files/2023-11/shatterproof-heart.png'; // Replace with your image source
+            img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAASCAYAAACw50UTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFMSURBVHgBtZTPUcJQEMa/XW5yoYRYgdBB6AA7MDNkxpt2oFQg3BjjASqQDqCE2EFKyMmDM2TdfQmCE0gikt9MMsl733779v0jFMg9PGT8AJGR/noQpCDEAC8p2i5wgDyih0+n9VXXV11Pm1VLMTrZhOZITEdOHKpAaF2IjpGgI0MLclrQuxtAjZbciLdqfFq8D4Lc1gxiR0yRDEjG/ALSQpuR6lNnXMABq7GP5jQ0NrIR67uPdrgx8xTtkJh5jFagD9a9OkEbdLIp0xs2+rnBRZGZ7XPOs0igezfBJTCfLp7t05m74yp6QP67uGbMejqnuQ//tEe2sDI8u4Kd8Xwfz7/6LQGfkYDyuEPjkrnTmeBLBnqHLNEImeGqbJznrAoLcQeiJ71WvSPdeiVLQK9YnYpnVKDTtHDTVK5iha5cVxn/CatCQlrLGH7TmG/RvnlBaH3PGwAAAABJRU5ErkJggg=='; // Source: https://dev.shatterproof.org/sites/default/files/2023-11/shatterproof-heart.png
             imageDiv.appendChild(img);
             tab.appendChild(imageDiv);
 
@@ -224,7 +235,7 @@
                 textDiv.appendChild(messageDiv);
             });
             tab.appendChild(textDiv);
-
+            // Test
             // Buttons Div
             const buttonsDiv = document.createElement('div');
             buttonsDiv.className = 'buttons';
@@ -249,10 +260,10 @@
             tab.appendChild(buttonsDiv);
 
 
-            const closeButtonClick = tab.querySelector('.close');
-            closeButtonClick.addEventListener('click', () => {
+            // Event listener for Close button
+            closeButton.addEventListener('click', () => {
                 hideFloatingTab(tabWrapper);
-                hideTab(); // Mark the tab as hidden
+                hideTab(); // Mark the tab as hidden in localStorage
                 clearInterval(messageCyclingInterval); // Stop cycling messages
             });
 
