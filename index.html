@@ -6,14 +6,9 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Social Proof Pop-up</title>
-    <style>
-        strong {
-            color: red;
-        }
-    </style>
 </head>
 
-<body style="background-color: black; color: white;">
+<body style="background-color: black; color: white; font-family: sans-serif;">
     <h1>Social Proof Pop-up</h1>
     <h1>Social Proof Pop-up</h1>
     <h1>Social Proof Pop-up</h1>
@@ -131,19 +126,30 @@
 
             const cssStyles = `        
             #fsp-floating-tab {
+                --font-color: #5E5E5E;
+                --font-color_hover: #4a4a4a;
+                --background-color: #FFFFFF;
+                --background-color_hover: #ebebeb;
+                --border-color: #F26824;
+                --inner_border-color: var(--border-color);
+                --border-width: 2px;
+                --inner_border-width: var(--border-width);
+                --border-radius: 18px;
+            }
+            
+            #fsp-floating-tab {
                 font-family: sans-serif;
                 position: fixed;
                 z-index: 2147483640;
                 bottom: -124vh;
                 right: 2rem;
-                border: 2px solid #F26824;
-                color: #5E5E5E;
-                background-color: #FFFFFF;
-                border-radius: 18px;
+                border: var(--border-width) solid var(--border-color);
+                color: var(--font-color);
+                background-color: var(--background-color);
+                border-radius: var(--border-radius);
                 display: flex;
                 width: 320px;
                 max-width: calc(100vw - 4rem - 4px);
-                // cursor: pointer;
                 user-select: none;
                 cursor: pointer;
             }
@@ -176,6 +182,11 @@
                 10% {transform: scale(1.1)}
             }
 
+            #fsp-floating-tab .image img{
+                max-width: 26px;
+                height: auto;
+            }
+
             #fsp-floating-tab .text {
                 padding: 10px;
                 display: flex;
@@ -191,29 +202,27 @@
                 align-items: flex-start;
             }
 
+            #fsp-floating-tab .text .ft-message strong{
+                margin-bottom: 0.2rem;
+            }
+
             #fsp-floating-tab .buttons {
-                border-left: 2px solid #F26824;
+                border-left: var(--inner_border-width) solid var(--inner_border-color);
                 display: flex;
                 flex-direction: column;
                 width: min-content; /* 120px */
             }
 
             #fsp-floating-tab .buttons .show {
-                cursor: pointer;
                 padding: 10px;
-                border-bottom: 2px solid #F26824;
-                background-color: #FFFFFF;
-                color: #5E5E5E;
-                border-radius: 0 18px 0 0;
+                border-bottom: var(--inner_border-width) solid var(--inner_border-color);
+                border-radius: 0 var(--border-radius) 0 0;
 
             }
 
             #fsp-floating-tab .buttons .close {
-                cursor: pointer;
                 padding: 10px;
-                background-color: #FFFFFF;
-                color: #5E5E5E;
-                border-radius: 0 0 18px 0;
+                border-radius: 0 0 var(--border-radius) 0;
             }
 
             #fsp-floating-tab .buttons div {
@@ -221,8 +230,8 @@
             }
 
             #fsp-floating-tab .buttons div:hover {
-                color: #4a4a4a;
-                background-color: #ebebeb;
+                color: var(--font-color_hover);
+                background-color: var(--background-color_hover);
             }
             
             @media only screen and (max-width: 400px){
@@ -247,7 +256,7 @@
             imageDiv.className = 'image';
             imageDiv.addEventListener('click', openDonationLink); // Add this line to add a click event listener
             const img = document.createElement('img');
-            img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAASCAYAAACw50UTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFMSURBVHgBtZTPUcJQEMa/XW5yoYRYgdBB6AA7MDNkxpt2oFQg3BjjASqQDqCE2EFKyMmDM2TdfQmCE0gikt9MMsl733779v0jFMg9PGT8AJGR/noQpCDEAC8p2i5wgDyih0+n9VXXV11Pm1VLMTrZhOZITEdOHKpAaF2IjpGgI0MLclrQuxtAjZbciLdqfFq8D4Lc1gxiR0yRDEjG/ALSQpuR6lNnXMABq7GP5jQ0NrIR67uPdrgx8xTtkJh5jFagD9a9OkEbdLIp0xs2+rnBRZGZ7XPOs0igezfBJTCfLp7t05m74yp6QP67uGbMejqnuQ//tEe2sDI8u4Kd8Xwfz7/6LQGfkYDyuEPjkrnTmeBLBnqHLNEImeGqbJznrAoLcQeiJ71WvSPdeiVLQK9YnYpnVKDTtHDTVK5iha5cVxn/CatCQlrLGH7TmG/RvnlBaH3PGwAAAABJRU5ErkJggg==';
+            img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAApCAYAAAB6MAquAAAAAXNSR0IArs4c6QAAAgJJREFUaEPtmk1KQzEQx03rCUQRBBeewqVg8RDqRqx6Czd6C2nFjXgI7cKlp3AhiFLxBLZP5sE88l7zMclk0ufDrkqbZPKb/2TeZFpVFIVacbw+x2eH/ffX07W354Fp2Pf23mS2tXO7ORw9uNbx2YDvU9hRNiAfSHODAAafrV9ODqhgoTZgXZ8DjUBf14NHmyKUzU53T459iknZWADiGkJg8KRJrRhVbE40Oa4GlArGBgUwGy939xSVqWOaUBWQhDGMeVQqtcMQWocqgaRgdIOuDEZVwzZOD+8SSMpzeuhxkgwFGFVSH6PhUeq4pmwg9RhUqTNA4CBQSU2v9p+kwyG1Gq40rmbn/SKXQWk7pUJdAoJz9A8kHTac9buZFDqX5Tr3YM1R+nDOBXVuVfrkKE6pm+KM69389GB+dX2QLlA5m/XNXbg+wATpK4RvU7HfN2/GtRvrX4TCUEOHiPUUYj0eMs/bU8DF5her85CFlzHW1lmy9uXaDGXrKNWyXNPLbT1PLhgnUBvDzwdDAmqLUhQYEhA+oyTbUL6kQoUhA6HBZVQTlD657hBrlrN5LSdUKEywQggpfa58P5m4QjRYIR1K4lyFnBcTWDSQxLmKCbEmFBsoRaXOCTERII5a3BATBQpRK6UqrLTtewhS1EqtShYgk1pSqmQD0ssmeM/9PwMlOn4B7E3bU7cv9L0AAAAASUVORK5CYII=';
             imageDiv.appendChild(img);
             imageDiv.addEventListener('click', openDonationLink); // Add this line to add a click event listener
             tab.appendChild(imageDiv);
