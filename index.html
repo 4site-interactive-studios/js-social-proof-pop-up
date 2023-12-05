@@ -35,6 +35,10 @@
         const visibleDuration = 4300; // Time each message is visible (ms)
         const changeDelay = 800; // Delay between hiding and showing when changing content (ms)
 
+        function openDonationLink() {
+            window.open('https://your-donation-link.com', '_blank'); // Replace with your actual donation link
+        }
+
         // Sample data: donation messages
         const donationMessages = [
             "<strong>Jack just donated $50!</strong>Join the Fight!",
@@ -118,6 +122,8 @@
             }, visibleDuration + changeDelay); // Cycle subsequent messages
         }
 
+
+
         // Create the floating tab element
         function createFloatingTab() {
             const tabWrapper = document.createElement('div');
@@ -135,11 +141,18 @@
                 background-color: #FFFFFF;
                 border-radius: 18px;
                 display: flex;
-                transition: bottom 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
                 width: 320px;
                 max-width: calc(100vw - 4rem - 4px);
                 // cursor: pointer;
                 user-select: none;
+                cursor: pointer;
+            }
+
+
+            @media (prefers-reduced-motion: no-preference) {
+                #fsp-floating-tab {
+                    transition: bottom 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                }
             }
 
             #fsp-floating-tab .image {
@@ -147,6 +160,20 @@
                 align-items: center;
                 display: flex;
                 padding: 10px 0 10px 10px;
+                transition: all 500ms ease;
+            }
+
+
+
+            @media (prefers-reduced-motion: no-preference) {
+                #fsp-floating-tab:hover .image {
+                    animation:pulse 1s infinite;
+                    filter: saturate(2);
+                }
+            }
+
+            @keyframes pulse {
+                10% {transform: scale(1.1)}
             }
 
             #fsp-floating-tab .text {
@@ -218,14 +245,17 @@
             // Image Div
             const imageDiv = document.createElement('div');
             imageDiv.className = 'image';
+            imageDiv.addEventListener('click', openDonationLink); // Add this line to add a click event listener
             const img = document.createElement('img');
-            img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAASCAYAAACw50UTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFMSURBVHgBtZTPUcJQEMa/XW5yoYRYgdBB6AA7MDNkxpt2oFQg3BjjASqQDqCE2EFKyMmDM2TdfQmCE0gikt9MMsl733779v0jFMg9PGT8AJGR/noQpCDEAC8p2i5wgDyih0+n9VXXV11Pm1VLMTrZhOZITEdOHKpAaF2IjpGgI0MLclrQuxtAjZbciLdqfFq8D4Lc1gxiR0yRDEjG/ALSQpuR6lNnXMABq7GP5jQ0NrIR67uPdrgx8xTtkJh5jFagD9a9OkEbdLIp0xs2+rnBRZGZ7XPOs0igezfBJTCfLp7t05m74yp6QP67uGbMejqnuQ//tEe2sDI8u4Kd8Xwfz7/6LQGfkYDyuEPjkrnTmeBLBnqHLNEImeGqbJznrAoLcQeiJ71WvSPdeiVLQK9YnYpnVKDTtHDTVK5iha5cVxn/CatCQlrLGH7TmG/RvnlBaH3PGwAAAABJRU5ErkJggg=='; // Source: https://dev.shatterproof.org/sites/default/files/2023-11/shatterproof-heart.png
+            img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAASCAYAAACw50UTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFMSURBVHgBtZTPUcJQEMa/XW5yoYRYgdBB6AA7MDNkxpt2oFQg3BjjASqQDqCE2EFKyMmDM2TdfQmCE0gikt9MMsl733779v0jFMg9PGT8AJGR/noQpCDEAC8p2i5wgDyih0+n9VXXV11Pm1VLMTrZhOZITEdOHKpAaF2IjpGgI0MLclrQuxtAjZbciLdqfFq8D4Lc1gxiR0yRDEjG/ALSQpuR6lNnXMABq7GP5jQ0NrIR67uPdrgx8xTtkJh5jFagD9a9OkEbdLIp0xs2+rnBRZGZ7XPOs0igezfBJTCfLp7t05m74yp6QP67uGbMejqnuQ//tEe2sDI8u4Kd8Xwfz7/6LQGfkYDyuEPjkrnTmeBLBnqHLNEImeGqbJznrAoLcQeiJ71WvSPdeiVLQK9YnYpnVKDTtHDTVK5iha5cVxn/CatCQlrLGH7TmG/RvnlBaH3PGwAAAABJRU5ErkJggg==';
             imageDiv.appendChild(img);
+            imageDiv.addEventListener('click', openDonationLink); // Add this line to add a click event listener
             tab.appendChild(imageDiv);
 
             // Text Div
             const textDiv = document.createElement('div');
             textDiv.className = 'text';
+            textDiv.addEventListener('click', openDonationLink); // Add this line to add a click event listener
             donationMessages.forEach((message, index) => {
                 const messageDiv = document.createElement('div');
                 messageDiv.className = 'ft-message';
@@ -235,7 +265,7 @@
                 textDiv.appendChild(messageDiv);
             });
             tab.appendChild(textDiv);
-            // Test
+
             // Buttons Div
             const buttonsDiv = document.createElement('div');
             buttonsDiv.className = 'buttons';
