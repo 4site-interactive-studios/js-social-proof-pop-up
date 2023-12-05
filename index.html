@@ -42,6 +42,16 @@
             "<strong>Stephanie just donated $3,000!</strong>Join the Fight!"
         ];
 
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Shuffle the donationMessages array randomly
+        shuffleArray(donationMessages);
+
         // Global variables
         let hideTimeoutId;
         let isHovering = false;
@@ -85,13 +95,15 @@
 
         // Function to cycle through messages
         let currentMessageIndex = 0;
+        // Function to cycle through messages
+        let previousMessageIndex = -1;
         function cycleMessages(tabWrapper) {
             if (shouldHideTab() || isHovering) {
                 return; // Exit if the tab should stay hidden or is being hovered over
             }
 
             const tab = tabWrapper.shadowRoot.querySelector('#fsp-floating-tab');
-            const messages = tab.querySelectorAll('.ft-message');
+            const messages = tab.querySelectorAll('.ft-message'); // Define messages here
 
             hideFloatingTab(tabWrapper);
 
@@ -100,11 +112,21 @@
                     return; // Check again before showing the tab
                 }
 
+                const getNextMessageIndex = () => {
+                    let newIndex;
+                    do {
+                        newIndex = Math.floor(Math.random() * donationMessages.length);
+                    } while (newIndex === previousMessageIndex);
+                    previousMessageIndex = newIndex;
+                    return newIndex;
+                };
+
+                const nextMessageIndex = getNextMessageIndex();
+
                 messages.forEach((msg, index) => {
-                    msg.style.display = index === currentMessageIndex ? 'flex' : 'none';
+                    msg.style.display = index === nextMessageIndex ? 'flex' : 'none';
                 });
 
-                currentMessageIndex = (currentMessageIndex + 1) % donationMessages.length;
                 showFloatingTab(tabWrapper);
             }, changeDelay);
         }
@@ -116,8 +138,6 @@
                 cycleMessages(tabWrapper);
             }, visibleDuration + changeDelay); // Cycle subsequent messages
         }
-
-
 
         // Create the floating tab element
         function createFloatingTab() {
