@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Social Proof Pop-up</title>
+    <style>
+        strong {
+            color: red;
+        }
+    </style>
+</head>
+
+<body style="background-color: black; color: white;">
+    <h1>Social Proof Pop-up</h1>
+    <h1>Social Proof Pop-up</h1>
+    <h1>Social Proof Pop-up</h1>
+    <h1>Social Proof Pop-up</h1>
+    <h1>Social Proof Pop-up</h1>
+    <h1>Social Proof Pop-up</h1>
+    <h1>Social Proof Pop-up</h1>
+    <h1>Social Proof Pop-up</h1>
+    <h1>Social Proof Pop-up</h1>
+    <h1>Social Proof Pop-up</h1>
+    <h1>Social Proof Pop-up</h1>
+    <h1>Social Proof Pop-up</h1>
+    <h1>Social Proof Pop-up</h1>
+    <h1>Social Proof Pop-up</h1>
+    <h1>Social Proof Pop-up</h1>
+    <script>
+        // Timing configurations
+        const initialShowDelay = 300; // Time before the tab first appears (ms)
+        const visibleDuration = 4300; // Time each message is visible (ms)
+        const changeDelay = 800; // Delay between hiding and showing when changing content (ms)
+
+        // Sample data: donation messages
+        const donationMessages = [
+            "<strong>Jack just donated $50!</strong>Join the Fight!",
+            "<strong>Jen just donated $100!</strong>Join the Fight!",
+            "<strong>Brianna just donated $200!</strong>Join the Fight!",
+            "<strong>Stephanie just donated $3,000!</strong>Join the Fight!"
+        ];
+
+        // Global variables
+        let hideTimeoutId;
+        let isHovering = false;
+        let messageCyclingInterval;
+
+        // Function to check if the tab should be hidden
+        function shouldHideTab() {
+            return sessionStorage.getItem('floatingTabHidden') === 'true';
+        }
+
+        // Function to mark the tab as hidden
+        function hideTab() {
+            sessionStorage.setItem('floatingTabHidden', 'true');
+        }
+
+        // Function to show the floating tab
+        function showFloatingTab(tab) {
+            const floatingTab = tab.shadowRoot.querySelector('#fsp-floating-tab');
+            floatingTab.style.bottom = '1rem'; // Adjust as needed for visibility
+            clearTimeout(hideTimeoutId);
+            hideTimeoutId = setTimeout(() => hideFloatingTab(tab), visibleDuration);
+        }
+
+        // Function to hide the floating tab
+        function hideFloatingTab(tab) {
+            const floatingTab = tab.shadowRoot.querySelector('#fsp-floating-tab');
+            floatingTab.style.bottom = '-124px'; // Adjust as needed to hide
+            clearTimeout(hideTimeoutId);
+        }
+
+        // Function to cycle through messages
+        let currentMessageIndex = 0;
+        function cycleMessages(tabWrapper) {
+            if (shouldHideTab() || isHovering) {
+                return; // Exit if the tab should stay hidden or is being hovered over
+            }
+
+            const tab = tabWrapper.shadowRoot.querySelector('#fsp-floating-tab');
+            const messages = tab.querySelectorAll('.ft-message');
+
+            hideFloatingTab(tabWrapper);
+
+            setTimeout(() => {
+                if (shouldHideTab() || isHovering) {
+                    return; // Check again before showing the tab
+                }
+
+                messages.forEach((msg, index) => {
+                    msg.style.display = index === currentMessageIndex ? 'flex' : 'none';
+                });
+
+                currentMessageIndex = (currentMessageIndex + 1) % donationMessages.length;
+                showFloatingTab(tabWrapper);
+            }, changeDelay);
+        }
+
+        // Function to start cycling messages
+        function startCyclingMessages(tabWrapper) {
+            cycleMessages(tabWrapper); // Start with the first message
+            messageCyclingInterval = setInterval(() => {
+                cycleMessages(tabWrapper);
+            }, visibleDuration + changeDelay); // Cycle subsequent messages
+        }
+
+        // Create the floating tab element
+        function createFloatingTab() {
+            const tabWrapper = document.createElement('div');
+            const shadowRoot = tabWrapper.attachShadow({ mode: 'open' });
+
+            const cssStyles = `        
+            #fsp-floating-tab {
+                font-family: sans-serif;
+                position: fixed;
+                z-index: 2147483640;
+                bottom: -124vh;
+                right: 2rem;
+                border: 2px solid #F26824;
+                color: #5E5E5E;
+                background-color: #FFFFFF;
+                border-radius: 18px;
+                display: flex;
+                transition: bottom 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                width: 320px;
+                max-width: calc(100vw - 4rem - 4px);
+                // cursor: pointer;
+                user-select: none;
+            }
+
+            #fsp-floating-tab .image {
+                justify-content: center;
+                align-items: center;
+                display: flex;
+                padding: 10px 0 10px 10px;
+            }
+
+            #fsp-floating-tab .text {
+                padding: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0 10px 0 10px;
+            }
+
+            #fsp-floating-tab .text .ft-message {
+                display: none;
+                flex-direction: column;
+                justify-content: center;
+                align-items: flex-start;
+            }
+
+            #fsp-floating-tab .buttons {
+                border-left: 2px solid #F26824;
+                display: flex;
+                flex-direction: column;
+                width: min-content; /* 120px */
+            }
+
+            #fsp-floating-tab .buttons .show {
+                cursor: pointer;
+                padding: 10px;
+                border-bottom: 2px solid #F26824;
+                background-color: #FFFFFF;
+                color: #5E5E5E;
+                border-radius: 0 18px 0 0;
+
+            }
+
+            #fsp-floating-tab .buttons .close {
+                cursor: pointer;
+                padding: 10px;
+                background-color: #FFFFFF;
+                color: #5E5E5E;
+                border-radius: 0 0 18px 0;
+            }
+
+            #fsp-floating-tab .buttons div {
+                white-space: nowrap;
+            }
+
+            #fsp-floating-tab .buttons div:hover {
+                color: #4a4a4a;
+                background-color: #ebebeb;
+            }
+            
+            @media only screen and (max-width: 400px){
+            #fsp-floating-tab {
+                max-width: calc(100vw - 2rem - 4px);
+                right: 1rem;
+            }
+            `; // Your CSS here
+
+            const style = document.createElement('style');
+            style.textContent = cssStyles;
+            shadowRoot.appendChild(style);
+
+            const tab = document.createElement('div');
+            tab.id = 'fsp-floating-tab';
+            tab.setAttribute('data-messages-shown', '');
+            tab.setAttribute('data-message-count', donationMessages.length);
+            tab.style.bottom = '-124px';
+
+            // Image Div
+            const imageDiv = document.createElement('div');
+            imageDiv.className = 'image';
+            const img = document.createElement('img');
+            img.src = 'https://dev.shatterproof.org/sites/default/files/2023-11/shatterproof-heart.png'; // Replace with your image source
+            imageDiv.appendChild(img);
+            tab.appendChild(imageDiv);
+
+            // Text Div
+            const textDiv = document.createElement('div');
+            textDiv.className = 'text';
+            donationMessages.forEach((message, index) => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'ft-message';
+                messageDiv.setAttribute('data-message-id', index);
+                messageDiv.innerHTML = message;
+                messageDiv.style.display = 'none';
+                textDiv.appendChild(messageDiv);
+            });
+            tab.appendChild(textDiv);
+
+            // Buttons Div
+            const buttonsDiv = document.createElement('div');
+            buttonsDiv.className = 'buttons';
+
+            // Give Now! Button
+            const showButton = document.createElement('div');
+            showButton.className = 'show';
+            showButton.setAttribute('data-action', 'show');
+            showButton.innerHTML = '<strong>Give Now!</strong>';
+            buttonsDiv.appendChild(showButton);
+            showButton.addEventListener('click', () => {
+                window.open('https://your-donation-link.com', '_blank'); // Replace with your link
+            });
+
+            // Close Button
+            const closeButton = document.createElement('div');
+            closeButton.className = 'close';
+            closeButton.setAttribute('data-action', 'close');
+            closeButton.innerHTML = '<em>Close</em>';
+            buttonsDiv.appendChild(closeButton);
+
+            tab.appendChild(buttonsDiv);
+
+
+            const closeButtonClick = tab.querySelector('.close');
+            closeButtonClick.addEventListener('click', () => {
+                hideFloatingTab(tabWrapper);
+                hideTab(); // Mark the tab as hidden
+                clearInterval(messageCyclingInterval); // Stop cycling messages
+            });
+
+            // Hover event listeners
+            tab.addEventListener('mouseover', () => {
+                isHovering = true;
+                clearTimeout(hideTimeoutId); // Prevent the tab from hiding when hovered
+            });
+
+            tab.addEventListener('mouseout', () => {
+                isHovering = false;
+                // Start a timeout to hide the tab after hover ends
+                hideTimeoutId = setTimeout(() => hideFloatingTab(tabWrapper), visibleDuration);
+            });
+
+            shadowRoot.appendChild(tab);
+            document.body.appendChild(tabWrapper);
+
+            return tabWrapper;
+        }
+
+        // Initialization
+        const floatingTab = createFloatingTab();
+        if (!shouldHideTab()) {
+            setTimeout(() => {
+                startCyclingMessages(floatingTab);
+            }, initialShowDelay);
+        }
+    </script>
+
+</body>
+
+</html>
