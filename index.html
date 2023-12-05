@@ -126,6 +126,9 @@
 
             const cssStyles = `        
             #fsp-floating-tab {
+                --font-family: sans-serif;
+                --font-size: inherit;
+                --line-height: inherit;
                 --font-color: #5E5E5E;
                 --font-color_hover: #4a4a4a;
                 --background-color: #FFFFFF;
@@ -135,23 +138,29 @@
                 --border-width: 2px;
                 --inner_border-width: var(--border-width);
                 --border-radius: 18px;
+                --rigth-offset: 2rem;
+                --width: 320px;
+                --padding: 10px;
             }
             
             #fsp-floating-tab {
-                font-family: sans-serif;
+                font-family: var(--font-family);
+                font-size: var(--font-size);
+                line-height: var(--line-height);
                 position: fixed;
                 z-index: 2147483640;
                 bottom: -124vh;
-                right: 2rem;
+                right: var(--rigth-offset);
                 border: var(--border-width) solid var(--border-color);
                 color: var(--font-color);
                 background-color: var(--background-color);
                 border-radius: var(--border-radius);
                 display: flex;
-                width: 320px;
-                max-width: calc(100vw - 4rem - 4px);
+                width: var(--width);
+                max-width: calc(100vw - var(--rigth-offset) - var(--rigth-offset) - var(--border-width) - var(--border-width));
                 user-select: none;
                 cursor: pointer;
+
             }
 
 
@@ -165,7 +174,7 @@
                 justify-content: center;
                 align-items: center;
                 display: flex;
-                padding: 10px 0 10px 10px;
+                padding: var(--padding) 0 var(--padding) var(--padding);
                 transition: all 500ms ease;
             }
 
@@ -188,11 +197,10 @@
             }
 
             #fsp-floating-tab .text {
-                padding: 10px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                padding: 0 10px 0 10px;
+                padding: 0 var(--padding) 0 var(--padding);
             }
 
             #fsp-floating-tab .text .ft-message {
@@ -210,18 +218,18 @@
                 border-left: var(--inner_border-width) solid var(--inner_border-color);
                 display: flex;
                 flex-direction: column;
-                width: min-content; /* 120px */
+                width: min-content;
             }
 
             #fsp-floating-tab .buttons .show {
-                padding: 10px;
+                padding: var(--padding);
                 border-bottom: var(--inner_border-width) solid var(--inner_border-color);
                 border-radius: 0 var(--border-radius) 0 0;
 
             }
 
             #fsp-floating-tab .buttons .close {
-                padding: 10px;
+                padding: var(--padding);
                 border-radius: 0 0 var(--border-radius) 0;
             }
 
@@ -235,9 +243,14 @@
             }
             
             @media only screen and (max-width: 400px){
-            #fsp-floating-tab {
-                max-width: calc(100vw - 2rem - 4px);
-                right: 1rem;
+                #fsp-floating-tab {
+                    --rigth-offset: 1rem;
+                }
+
+                #fsp-floating-tab .text {
+
+                    padding: calc(var(--padding) / 2) var(--padding);
+                }
             }
             `; // Your CSS here
 
